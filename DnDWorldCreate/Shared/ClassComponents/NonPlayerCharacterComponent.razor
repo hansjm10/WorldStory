@@ -1,0 +1,16 @@
+﻿@using DnDWorldCreate.Data
+@using DnDWorldCreate.Services
+@inject NPCService _NPCService
+@inherits BaseClassComponent<NPC, NPCService, NPCService>
+
+<ListComponentNPC Label="Select NPC" Items="Items" OnSelected="OnItemSelected" ItemsChanged="@_selectedItemIsNew" />
+
+<AddEditNPC SaveButtonText="@(SelectedItem == null ? "Save New NPC" : "Update NPC")" OnSave="OnSaveItem" OnDelete="OnDeleteItem" EditItem="@(SelectedItem ?? new NPC())" />
+
+@code {
+    protected override Func<NPCService, NPCService, Task<IEnumerable<NPC>>> GetAllItemsAsync => (service, unusedService) => service.GetAllNPCsAsync();
+    protected override Func<NPCService, NPC, Task> AddItemAsync => (service, item) => service.AddNPCAsync(item);
+    protected override Func<NPCService, NPC, Task> UpdateItemAsync => (service, item) => service.UpdateNPCAsync(item);
+    protected override Func<NPCService, int, Task> DeleteItemAsync => (service, id) => service.DeleteNPCAsync(id);
+    protected override int GetItemId(NPC item) => item.Id;
+}

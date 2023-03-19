@@ -1,0 +1,44 @@
+﻿@using DnDWorldCreate.Data
+@using DnDWorldCreate.Services
+@inherits AddEditBase<NPC>
+@inject TownService _townService
+
+<EditForm Model="EditItem">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Name</label>
+        <InputText id="name" class="form-control" @bind-Value="EditItem.Name" />
+    </div>
+    <div class="form-group">
+        <label for="description">Town ID</label>
+        <ListComponentTown Label="Select Town" Items="Towns" OnSelected="OnRegionSelected" ItemsChanged="@_selectedTownIsNew"></ListComponentTown>
+    </div>
+
+    <ActionButtons TItem="NPC" EditItem="@EditItem"
+                   OnDelete="@OnDelete" OnSave="@OnSave" SaveButtonText="@SaveButtonText" OnDeleteAllInstances="@OnDeleteAllInstances"></ActionButtons>
+</EditForm>
+
+@code{
+    private Town SelectedTown;
+    private bool _selectedTownIsNew = true;
+    private List<Town> Towns { get; set; } = new List<Town>();
+    private void OnRegionSelected(Town town)
+    {
+        SelectedTown = town;
+        EditItem.TownId = town.Id; 
+        _selectedTownIsNew = town == null;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRegionsAsync();
+    }
+
+    private async Task LoadRegionsAsync()
+    {
+        Towns = (await _townService.GetAllTownsAsync()).ToList();
+    }
+}
+
+

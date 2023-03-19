@@ -1,0 +1,16 @@
+﻿@using DnDWorldCreate.Data
+@using DnDWorldCreate.Services
+@inject TownService _townService
+@inherits BaseClassComponent<Town, TownService, TownService>
+
+<ListComponentTown Label="Select Town" Items="Items" OnSelected="OnItemSelected" ItemsChanged="@_selectedItemIsNew" />
+
+<AddEditTown SaveButtonText="@(SelectedItem == null ? "Save New Town" : "Update Town")" OnSave="OnSaveItem" OnDelete="OnDeleteItem" EditItem="@(SelectedItem ?? new Town())" />
+
+@code {
+    protected override Func<TownService, TownService, Task<IEnumerable<Town>>> GetAllItemsAsync => (service, unusedService) => service.GetAllTownsAsync();
+    protected override Func<TownService, Town, Task> AddItemAsync => (service, item) => service.AddTownAsync(item);
+    protected override Func<TownService, Town, Task> UpdateItemAsync => (service, item) => service.UpdateTownAsync(item);
+    protected override Func<TownService, int, Task> DeleteItemAsync => (service, id) => service.DeleteTownAsync(id);
+    protected override int GetItemId(Town item) => item.Id;
+}

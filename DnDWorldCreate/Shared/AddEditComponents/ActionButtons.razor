@@ -1,0 +1,13 @@
+﻿@typeparam TItem
+@if (OnSave.HasDelegate)
+{
+    <button type="submit" class="btn btn-primary" @onclick=@(()=> Save())>@SaveButtonText</button>
+}
+@if (OnDelete.HasDelegate)
+{
+    <button type="submit" class="btn btn-primary" @onclick=@(()=> Delete())>Delete</button>
+}
+@if (OnDeleteAllInstances.HasDelegate)
+{
+    <button type="submit" class="btn btn-primary" @onclick=@(()=> DeleteAllInstances())>Delete All Instances</button>
+}

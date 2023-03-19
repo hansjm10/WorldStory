@@ -1,0 +1,18 @@
+﻿@using DnDWorldCreate.Data
+@using DnDWorldCreate.Services
+@inject RegionService _regionService
+@inject RegionManagerService _regionManagerService
+@inherits BaseClassComponent<Region, RegionService, RegionManagerService>
+
+<ListComponentRegion Label="Select Region" Items="Items" OnSelected="OnItemSelected" ItemsChanged="@_selectedItemIsNew" />
+
+<AddEditRegion SaveButtonText="@(SelectedItem == null ? "Save New Region" : "Update Region")" OnSave="OnSaveItem" OnDelete="OnDeleteItem" OnDeleteAllInstances="OnDeleteItemAndChildrenItems" EditItem="@(SelectedItem ?? new Region())" />
+
+@code {
+    protected override Func<RegionService, RegionManagerService, Task<IEnumerable<Region>>> GetAllItemsAsync => (service, regionManagerService) => regionManagerService.GetRegionsAsync(true);
+    protected override Func<RegionService, Region, Task> AddItemAsync => (service, item) => service.AddRegionAsync(item);
+    protected override Func<RegionService, Region, Task> UpdateItemAsync => (service, item) => service.UpdateRegionAsync(item);
+    protected override Func<RegionService, int, Task> DeleteItemAsync => (service, id) => service.DeleteRegionAsync(id);
+    protected override Func<RegionManagerService, int, Task> DeleteItemAndChildrenItemsAsync => (service, item) => service.DeleteRegionWithTownsAsync(item);
+    protected override int GetItemId(Region item) => item.Id;
+}

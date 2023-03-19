@@ -1,0 +1,42 @@
+﻿@using DnDWorldCreate.Data
+@using DnDWorldCreate.Services
+@inject RegionManagerService _regionManagerService;
+@inherits AddEditBase<Town>
+
+<EditForm Model="EditItem">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Name</label>
+        <InputText id="name" class="form-control" @bind-Value="EditItem.Name" />
+    </div>
+
+    <div class="form-group">
+        <label for="description">Region ID</label>
+       <!-- <InputNumber id="description" class="form-control" @bind-Value="EditItem.RegionId" /> -->
+        <ListComponentRegion Label="Select Region" Items="Regions" OnSelected="OnRegionSelected" ItemsChanged="@_selectedRegionIsNew"></ListComponentRegion>
+    </div>
+
+    <ActionButtons TItem="Town" OnSave="OnSave" SaveButtonText="@SaveButtonText" OnDelete="OnDelete" EditItem="EditItem"></ActionButtons>
+</EditForm>
+@code{
+    private Region SelectedRegion;
+    private bool _selectedRegionIsNew = true;
+    private IEnumerable<Region> Regions { get; set; } = new List<Region>();
+    private void OnRegionSelected(Region region)
+    {
+        SelectedRegion = region;
+        EditItem.RegionId = region.Id; 
+        _selectedRegionIsNew = region == null;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRegionsAsync();
+    }
+
+    private async Task LoadRegionsAsync()
+    {
+        Regions = await _regionManagerService.GetRegionsAsync();
+    }
+}
