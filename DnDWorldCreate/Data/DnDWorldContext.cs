@@ -9,5 +9,6 @@ namespace DnDWorldCreate.Data
         public DbSet<Region> Regions { get; set; }
         public DbSet<Town> Towns { get; set; }
         public DbSet<NPC> NPCs { get; set; }
+        public DbSet<Item> Items { get; set; }
     }
 }

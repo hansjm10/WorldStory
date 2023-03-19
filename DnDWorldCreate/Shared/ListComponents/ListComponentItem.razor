@@ -1,0 +1,12 @@
+﻿@inherits ListComponentBase<Item>
+<label>@Label</label>
+<select @onchange="OnSelectChanged" class="form-control">
+    @if (ItemsChanged)
+    {
+        <option selected>-- Select a value --</option>
+    }
+    @foreach (var item in Items)
+    {
+        <option value="@item.Id">@item.Name</option>
+    }
+</select>

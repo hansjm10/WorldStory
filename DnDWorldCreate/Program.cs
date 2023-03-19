@@ -16,6 +16,7 @@ builder.Services.AddScoped(typeof(RegionService));
 builder.Services.AddScoped(typeof(TownService));
 builder.Services.AddScoped(typeof(NPCService));
 builder.Services.AddScoped(typeof(RegionManagerService));
+builder.Services.AddScoped(typeof(ItemService));
 builder.Services.AddScoped<ITownRepository, TownRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 var app = builder.Build();
