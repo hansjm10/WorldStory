@@ -15,7 +15,10 @@
         <label for="description">Town ID</label>
         <ListComponentTown Label="Select Town" Items="Towns" OnSelected="OnRegionSelected" ItemsChanged="@_selectedTownIsNew"></ListComponentTown>
     </div>
-
+    <div class="form-group">
+        <label for="description">Backstory</label>
+        <InputTextArea id="description" class="form-control" @bind-Value="EditItem.Backstory" />
+    </div>
     <ActionButtons TItem="NPC" EditItem="@EditItem"
                    OnDelete="@OnDelete" OnSave="@OnSave" SaveButtonText="@SaveButtonText" OnDeleteAllInstances="@OnDeleteAllInstances"></ActionButtons>
 </EditForm>
