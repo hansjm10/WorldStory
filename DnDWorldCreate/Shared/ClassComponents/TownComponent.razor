@@ -9,6 +9,7 @@
 
 @code {
     protected override Func<TownService, TownService, Task<IEnumerable<Town>>> GetAllItemsAsync => (service, unusedService) => service.GetAllTownsAsync();
+    protected override Func<TownService, TownService, Task<IReadOnlyList<Town>>> GetAllItemsReadOnlyAsync => (service, unusedService) => service.GetAllTownsReadOnlyAsync();
     protected override Func<TownService, Town, Task> AddItemAsync => (service, item) => service.AddTownAsync(item);
     protected override Func<TownService, Town, Task> UpdateItemAsync => (service, item) => service.UpdateTownAsync(item);
     protected override Func<TownService, int, Task> DeleteItemAsync => (service, id) => service.DeleteTownAsync(id);

@@ -24,11 +24,17 @@ namespace DnDWorldCreate.Services
         }
         public async Task<NPC> GetNPCByIdAsync(int id)
         {
-            return await _nonPlayerCharacterRepository.GetByIdAsync(id);
+            var npc = await _nonPlayerCharacterRepository.GetByIdAsync(id) ?? throw new ArgumentException($"Cannot find NPC: {id}");
+            return npc;
         }
         public async Task<IEnumerable<NPC>> GetAllNPCsAsync()
         {
             return await _nonPlayerCharacterRepository.GetAllAsync();
+        }
+        public async Task<IReadOnlyList<NPC>> GetAllNPCsReadOnlyAsync()
+        {
+            var npcs = await _nonPlayerCharacterRepository.GetAllAsync();
+            return npcs.ToList();
         }
         public async Task UpdateNPCAsync(NPC nonPlayerCharacter)
         {

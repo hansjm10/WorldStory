@@ -1,5 +1,6 @@
 ﻿using DnDWorldCreate.Data;
 using DnDWorldCreate.Services;
+using DnDWorldCreate.Services.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -50,11 +51,10 @@ namespace DnDWorldCreateTests
         {
             // Arrange
             var service = GetRegionService();
-            Region newRegion = null;
 
             // Act & Assert
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => service.AddRegionAsync(newRegion));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => service.AddRegionAsync(null));
         }
         [Fact]
         public async Task DeleteRegionAsync_ShouldDeleteRegion()
@@ -62,8 +62,8 @@ namespace DnDWorldCreateTests
             // Arrange
             var service = GetRegionService();
             var newRegion = new Region { Name = "TestRegion", Description = "TestDescription" };
-            service.AddRegionAsync(newRegion);
-            service.SaveChangesAsync();
+            await service.AddRegionAsync(newRegion);
+            await service.SaveChangesAsync();
 
             // Act
             await service.DeleteRegionAsync(newRegion.Id);
@@ -81,12 +81,10 @@ namespace DnDWorldCreateTests
         {
             // Arrange
             var service = GetRegionService();
-            Region newRegion = null;
+            int nonExistentRegionId = -1; // Or any value that you know doesn't correspond to an existing region
 
             // Act && Assert
-
-            await Assert.ThrowsAsync<NullReferenceException>(() => service.DeleteRegionAsync(newRegion.Id));
-
+            await Assert.ThrowsAsync<InvalidOperationException>(() => service.DeleteRegionAsync(nonExistentRegionId));
         }
         [Fact]
         public async Task DeleteRegionAsync_ShouldThrowErrorWhenRegionIdDoesNotExist()

@@ -15,15 +15,17 @@
     <div class="form-group">
         <label for="description">Region ID</label>
        <!-- <InputNumber id="description" class="form-control" @bind-Value="EditItem.RegionId" /> -->
-        <ListComponentRegion Label="Select Region" Items="Regions" OnSelected="OnRegionSelected" ItemsChanged="@_selectedRegionIsNew"></ListComponentRegion>
+        <ListComponentRegion @key="Regions" Label="Select Region" Items="Regions" OnSelected="OnRegionSelected" ItemsChanged="@_selectedRegionIsNew"></ListComponentRegion>
     </div>
 
     <ActionButtons TItem="Town" OnSave="OnSave" SaveButtonText="@SaveButtonText" OnDelete="OnDelete" EditItem="EditItem"></ActionButtons>
 </EditForm>
 @code{
-    private Region SelectedRegion;
+    private Region? SelectedRegion;
     private bool _selectedRegionIsNew = true;
-    private IEnumerable<Region> Regions { get; set; } = new List<Region>();
+    private IReadOnlyList<Region> Regions { get; set; } = new List<Region>();
+
+
     private void OnRegionSelected(Region region)
     {
         SelectedRegion = region;
@@ -32,11 +34,12 @@
     }
     protected override async Task OnInitializedAsync()
     {
+        SelectedRegion = await _regionManagerService.GetUnassignedRegion();
         await LoadRegionsAsync();
     }
 
     private async Task LoadRegionsAsync()
     {
-        Regions = await _regionManagerService.GetRegionsAsync();
+        Regions = await _regionManagerService.GetRegionsReadOnlyAsync();
     }
 }

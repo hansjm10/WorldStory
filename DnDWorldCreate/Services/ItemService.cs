@@ -22,11 +22,18 @@ namespace DnDWorldCreate.Services
         }
         public async Task<Item> GetItemById(int id)
         {
-            return await _itemRepository.GetByIdAsync(id);
+            var item = await _itemRepository.GetByIdAsync(id) ?? throw new ArgumentException($"Cannot find item: {id}");
+            return item;
+;
         }
         public async Task<IEnumerable<Item>> GetAllItemsAsync()
         {
             return await _itemRepository.GetAllAsync();
+        }
+        public async Task<IReadOnlyList<Item>> GetAllItemsReadOnlyAsync()
+        {
+            var items = await _itemRepository.GetAllAsync();
+            return items.ToList();
         }
         public async Task UpdateItemAsync(Item item)
         {

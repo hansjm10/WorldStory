@@ -25,11 +25,17 @@ namespace DnDWorldCreate.Services
         }
         public async Task<Town> GetTownByIdAsync(int id)
         {
-            return await _townRepository.GetByIdAsync(id);
+            var town = await _townRepository.GetByIdAsync(id) ?? throw new ArgumentException($"Cannot find town: {id}");
+            return town;
         }
         public async Task<IEnumerable<Town>> GetAllTownsAsync()
         {
             return await _townRepository.GetAllAsync();
+        }
+        public async Task<IReadOnlyList<Town>> GetAllTownsReadOnlyAsync()
+        {
+            var towns = (await GetAllTownsAsync()).ToList();
+            return towns;
         }
         public async Task UpdateTownAsync(Town town)
         {

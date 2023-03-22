@@ -3,12 +3,13 @@
 @inject ItemService _itemService
 @inherits BaseClassComponent<Item, ItemService, ItemService>
 
-<ListComponentItem Label="Select Item" Items="Items" OnSelected="OnItemSelected" ItemsChanged="@_selectedItemIsNew" />
+<ListComponentItem @key="Items" Label="Select Item" Items="Items" OnSelected="OnItemSelected" ItemsChanged="@_selectedItemIsNew" />
 
 <AddEditItem SaveButtonText="@(SelectedItem == null ? "Save New Item" : "Update Item")" OnSave="OnSaveItem" OnDelete="OnDeleteItem" EditItem="@(SelectedItem ?? new Item())" />
 
 @code {
     protected override Func<ItemService, ItemService, Task<IEnumerable<Item>>> GetAllItemsAsync => (service, unusedService) => service.GetAllItemsAsync();
+    protected override Func<ItemService, ItemService, Task<IReadOnlyList<Item>>> GetAllItemsReadOnlyAsync => (service, unusedService) => service.GetAllItemsReadOnlyAsync();
     protected override Func<ItemService, Item, Task> AddItemAsync => (service, item) => service.AddItemAsync(item);
     protected override Func<ItemService, Item, Task> UpdateItemAsync => (service, item) => service.UpdateItemAsync(item);
     protected override Func<ItemService, int, Task> DeleteItemAsync => (service, id) => service.DeleteItemAsync(id);

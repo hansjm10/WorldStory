@@ -11,7 +11,7 @@ namespace DnDWorldCreate.Services
         {
             _regionRepository = regionRepository;
         }
-        public async Task<Region> AddRegionAsync(Region region)
+        public async Task<Region> AddRegionAsync(Region? region)
         {
             if (region == null)
             {
@@ -25,7 +25,8 @@ namespace DnDWorldCreate.Services
         }
         public async Task<Region> GetRegionByIdAsync(int id)
         {
-            return await _regionRepository.GetByIdAsync(id);
+            var region = await _regionRepository.GetByIdAsync(id) ?? throw new ArgumentException($"Cannot find region: {id}");
+            return region;
         }
         public async Task<IEnumerable<Region>> GetAllRegionsAsync()
         {
@@ -57,6 +58,9 @@ namespace DnDWorldCreate.Services
             if (region == null)
             {
                 throw new InvalidOperationException($"Region with ID {id} not found.");
+            }
+            if(region.Id == 0) { 
+                throw new InvalidOperationException("The Unassigned region cannot be deleted");
             }
 
             _regionRepository.Remove(region);

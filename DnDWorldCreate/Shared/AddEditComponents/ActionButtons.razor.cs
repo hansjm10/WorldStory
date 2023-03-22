@@ -14,12 +14,18 @@ namespace DnDWorldCreate.Shared.AddEditComponents
         private int _lastItemId;
         private EditContext EditContext;
 
+        public ActionButtons()
+        {
+            EditItem = CreateDefaultEdiItem();
+            EditContext = new EditContext(EditItem);
+            SaveButtonText = "Save";
+        }
         protected override void OnParametersSet()
         {
             // Reset the form and create a new EditContext when the EditItem property changes
-            if (EditContext == null || (EditItem != null && EditItem.Id != _lastItemId))
+            if (EditItem != null && (EditContext == null || EditItem.Id != _lastItemId))
             {
-                _lastItemId = EditItem?.Id ?? 0;
+                _lastItemId = EditItem.Id;
                 EditContext = new EditContext(EditItem);
             }
         }
@@ -44,6 +50,12 @@ namespace DnDWorldCreate.Shared.AddEditComponents
             {
                 await OnSave.InvokeAsync(EditItem);
             }
+        }
+        private static TItem CreateDefaultEdiItem()
+        {
+            // Create a default instance of TItem with default values.
+            // This method should be adjusted according to your specific TItem type.
+            return Activator.CreateInstance<TItem>();
         }
     }
 }
