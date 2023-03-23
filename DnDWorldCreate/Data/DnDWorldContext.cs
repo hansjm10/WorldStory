@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using DnDWorldCreate.Data.Entitys;
 namespace DnDWorldCreate.Data
 {
     public class DnDWorldContext : DbContext

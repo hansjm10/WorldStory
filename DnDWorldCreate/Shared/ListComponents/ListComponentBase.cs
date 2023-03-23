@@ -1,4 +1,4 @@
-﻿using DnDWorldCreate.Data;
+﻿using DnDWorldCreate.Data.Entitys;
 using Microsoft.AspNetCore.Components;
 
 namespace DnDWorldCreate.Shared.ListComponents

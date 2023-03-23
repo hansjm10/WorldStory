@@ -1,4 +1,4 @@
-﻿namespace DnDWorldCreate.Data
+﻿namespace DnDWorldCreate.Data.Entitys
 {
     public abstract class BaseEntity
     {

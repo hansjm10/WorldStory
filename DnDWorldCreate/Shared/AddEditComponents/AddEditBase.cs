@@ -1,5 +1,6 @@
 ﻿using DnDWorldCreate.Data;
 using DnDWorldCreate.Services;
+using DnDWorldCreate.Data.Entitys;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;

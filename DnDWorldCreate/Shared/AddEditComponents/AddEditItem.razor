@@ -1,4 +1,4 @@
-﻿@using DnDWorldCreate.Data
+﻿@using DnDWorldCreate.Data.Entitys
 @inherits AddEditBase<Item>
 
 <EditForm Model="EditItem">
@@ -10,7 +10,7 @@
         <InputText id="name" class="form-control" @bind-Value="EditItem.Name" />
     </div>
 
-    <div class="form-group">
+    <div class="form-group"> 
         <label for="description">Description</label>
         <InputTextArea id="description" class="form-control" @bind-Value="EditItem.Description" />
     </div>
@@ -18,4 +18,3 @@
     <ActionButtons TItem="Item" EditItem="@EditItem"
                    OnDelete="@OnDelete" OnSave="@OnSave" SaveButtonText="@SaveButtonText" OnDeleteAllInstances="@OnDeleteAllInstances"></ActionButtons>
 </EditForm>
-

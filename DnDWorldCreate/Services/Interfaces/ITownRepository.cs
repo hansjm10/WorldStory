@@ -1,4 +1,4 @@
-﻿using DnDWorldCreate.Data;
+﻿using DnDWorldCreate.Data.Entitys;
 
 namespace DnDWorldCreate.Services.Interfaces
 {

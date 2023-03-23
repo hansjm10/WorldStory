@@ -1,4 +1,5 @@
 ﻿using DnDWorldCreate.Data;
+using DnDWorldCreate.Data.Entitys;
 using DnDWorldCreate.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

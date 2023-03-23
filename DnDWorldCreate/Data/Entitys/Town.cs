@@ -1,6 +1,6 @@
 ﻿using System.IO.Pipes;
 
-namespace DnDWorldCreate.Data
+namespace DnDWorldCreate.Data.Entitys
 {
     public class Town : BaseEntity
     {

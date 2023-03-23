@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components;
-using DnDWorldCreate.Data;
+using DnDWorldCreate.Data.Entitys;
 
 namespace DnDWorldCreate.Shared.AddEditComponents
 {

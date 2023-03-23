@@ -1,0 +1,57 @@
+﻿@using SixLabors.ImageSharp
+@inject IWebHostEnvironment Environment
+<InputFile OnChange="LoadFile" multiple=false></InputFile>
+<br />
+
+@ErrorMessage
+
+@code {
+    private long maxFileSize = 1024 * 256;
+    private string ErrorMessage { get; set; } = string.Empty;
+
+    private string GetFormattedMaxFileSize()
+    {
+        return $"{maxFileSize / 1024} KB";
+    }
+    private async Task SaveFileAsync(IBrowserFile file, string filePath)
+    {
+        await using FileStream fs = new FileStream(filePath, FileMode.Create);
+        await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+    }
+    private async Task LoadFile(InputFileChangeEventArgs e)
+    {
+        ErrorMessage = string.Empty;
+        try
+        {
+            //Checks to see if the image and content are valid.
+            using var image = await Image.LoadAsync(e.File.OpenReadStream());
+
+            var folderPath = Path.Combine(Environment.ContentRootPath, Environment.EnvironmentName, "unsafe_uploads");
+            System.IO.Directory.CreateDirectory(folderPath);
+            var trustedFileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName()) + Path.GetExtension(e.File.Name);
+            var filePath = Path.Combine(folderPath, trustedFileName);
+
+            if(e.File.Size > maxFileSize)
+            {
+                throw new IOException("The image file size must be under " + maxFileSize + " bytes");
+            }
+
+            await SaveFileAsync(e.File, filePath);
+        }
+        catch (UnknownImageFormatException)
+        {
+            ErrorMessage = "The image file type is not supported";
+
+        }
+        catch(IOException)
+        {
+            ErrorMessage = "Files must be under " + maxFileSize + " bytes.";
+        }
+        catch(Exception ex) when (ex is ArgumentException||
+                                  ex is NotSupportedException ||
+                                  ex is InvalidImageContentException)
+        {
+            ErrorMessage = "The image failed to upload.";
+        }
+    }
+}
