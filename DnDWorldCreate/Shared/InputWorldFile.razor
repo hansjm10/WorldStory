@@ -6,7 +6,9 @@
 @ErrorMessage
 
 @code {
-    private long maxFileSize = 1024 * 256;
+    private const int BITS_TO_BYTE = 1024;
+    private const int NUM_OF_BYTES = 256;
+    private long maxFileSize = BITS_TO_BYTE * NUM_OF_BYTES;
     private string ErrorMessage { get; set; } = string.Empty;
 
     private string GetFormattedMaxFileSize()

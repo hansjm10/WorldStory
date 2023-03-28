@@ -1,5 +1,6 @@
 ﻿@using DnDWorldCreate.Data;
 @using DnDWorldCreate.Data.Entitys
+@using DnDWorldCreate.Shared.AddEditComponents.InputTextComponents
 @inherits AddEditBase<Region>
 
 <EditForm Model="EditItem">
@@ -8,16 +9,10 @@
 
     @ErrorMessage
 
-    <div class="form-group">
-        <label for="name">Name</label>
-        <InputText id="name" class="form-control" @bind-Value="EditItem.Name" />
-    </div>
+    <Input TValue="string" Label="Name" Id="name" @bind-Value="EditItem.Name" />
 
-    <div class="form-group">
-        <label for="description">Description</label>
-        <InputTextArea id="description" class="form-control" @bind-Value="EditItem.Description" />
-    </div>
-    
+    <Input TValue="string" RenderAsTextArea="true" Label="Description" Id="description" @bind-Value="EditItem.Description" />
+
     <ActionButtons TItem="Region" EditItem="@EditItem"
         OnDelete="@OnDelete" OnSave="@OnSave" SaveButtonText="@SaveButtonText" OnDeleteAllInstances="@OnDeleteAllInstances"></ActionButtons>
 </EditForm>

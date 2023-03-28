@@ -1,5 +1,6 @@
 ﻿@using DnDWorldCreate.Data.Entitys
 @using DnDWorldCreate.Services
+@using DnDWorldCreate.Shared.AddEditComponents.InputTextComponents
 @inject RegionManagerService _regionManagerService;
 @inherits AddEditBase<Town>
 
@@ -7,10 +8,7 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="form-group">
-        <label for="name">Name</label>
-        <InputText id="name" class="form-control" @bind-Value="EditItem.Name" />
-    </div>
+    <Input TValue="string" Label="Name" Id="name" @bind-Value="EditItem.Name" />
 
     <div class="form-group">
         <label for="description">Region ID</label>

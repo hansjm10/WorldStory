@@ -1,0 +1,64 @@
+﻿@using System.Linq.Expressions
+@typeparam TValue
+@inherits InputBase<TValue>
+
+<div class="form-group">
+    <label for="@Id">@Label</label>
+    @if (RenderAsTextArea)
+    {
+        <textarea @attributes="AdditionalAttributes" id="@Id" class="form-control @CssClass" @bind="CurrentValue" rows="@TextAreaRows"></textarea>
+    }
+    else
+    {
+        <input @attributes="AdditionalAttributes" type="@InputType" id="@Id" class="form-control @CssClass" @bind="CurrentValue" />
+    }
+</div>
+
+@code {
+    [Parameter] public string Label { get; set; }
+    [Parameter] public string Id { get; set; }
+    [Parameter] public string InputType { get; set; } = "text";
+    [Parameter] public bool RenderAsTextArea { get; set; } = false;
+    [Parameter] public int TextAreaRows { get; set; } = 3;
+
+    protected override bool TryParseValueFromString(string? value, out TValue result, out string? validationErrorMessage)
+    {
+        Type type = typeof(TValue);
+
+        if (type == typeof(string))
+        {
+            result = (TValue)(object)(value ?? string.Empty);
+            validationErrorMessage = null;
+            return true;
+        }
+        else if (Nullable.GetUnderlyingType(type) != null || type.IsValueType)
+        {
+            try
+            {
+                result = (TValue)Convert.ChangeType(value, Nullable.GetUnderlyingType(type) ?? type);
+                validationErrorMessage = null;
+                return true;
+            }
+            catch (FormatException)
+            {
+                result = default!;
+                validationErrorMessage = "Invalid format.";
+                return false;
+            }
+            catch (OverflowException)
+            {
+                result = default!;
+                validationErrorMessage = "Value is out of range.";
+                return false;
+            }
+            catch (Exception)
+            {
+                throw new InvalidOperationException($"The type '{typeof(TValue)}' is not supported by this input component.");
+            }
+        }
+        else
+        {
+            throw new InvalidOperationException($"The type '{typeof(TValue)}' is not supported by this input component.");
+        }
+    }
+}

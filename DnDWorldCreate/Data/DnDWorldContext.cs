@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using DnDWorldCreate.Data.Entitys;
+using DnDWorldCreate.Data.Stats;
+
 namespace DnDWorldCreate.Data
 {
     public class DnDWorldContext : DbContext
@@ -10,5 +12,6 @@ namespace DnDWorldCreate.Data
         public DbSet<Town> Towns { get; set; }
         public DbSet<NPC> NPCs { get; set; }
         public DbSet<Item> Items { get; set; }
+        public DbSet<BaseStats> BaseStats { get; set; }
     }
 }

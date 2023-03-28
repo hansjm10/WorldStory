@@ -3,6 +3,7 @@ using DnDWorldCreate.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DnDWorldCreate.Migrations
 {
     [DbContext(typeof(DnDWorldContext))]
-    partial class DnDWorldContextModelSnapshot : ModelSnapshot
+    [Migration("20230323013958_ImagePath")]
+    partial class ImagePath
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,24 +54,16 @@ namespace DnDWorldCreate.Migrations
                     b.Property<string>("Backstory")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Occupation")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StatsId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TownId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StatsId");
 
                     b.HasIndex("TownId");
 
@@ -118,52 +113,13 @@ namespace DnDWorldCreate.Migrations
                     b.ToTable("Towns");
                 });
 
-            modelBuilder.Entity("DnDWorldCreate.Data.Stats.BaseStats", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Charisma")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Constitution")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Dexterity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Intelligence")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Strength")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Wisdom")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BaseStats");
-                });
-
             modelBuilder.Entity("DnDWorldCreate.Data.Entitys.NPC", b =>
                 {
-                    b.HasOne("DnDWorldCreate.Data.Stats.BaseStats", "Stats")
-                        .WithMany()
-                        .HasForeignKey("StatsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DnDWorldCreate.Data.Entitys.Town", "Town")
                         .WithMany("NPCs")
                         .HasForeignKey("TownId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Stats");
 
                     b.Navigation("Town");
                 });

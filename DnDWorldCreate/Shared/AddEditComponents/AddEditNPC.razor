@@ -1,5 +1,6 @@
 ﻿@using DnDWorldCreate.Data.Entitys
 @using DnDWorldCreate.Services
+@using DnDWorldCreate.Shared.AddEditComponents.InputTextComponents
 @inherits AddEditBase<NPC>
 @inject TownService _townService
 
@@ -7,18 +8,14 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="form-group">
-        <label for="name">Name</label>
-        <InputText id="name" class="form-control" @bind-Value="EditItem.Name" />
-    </div>
+    <Input TValue="string" Label="Name" Id="name" @bind-Value="EditItem.Name" />
+
     <div class="form-group">
         <label for="description">Town ID</label>
         <ListComponentTown Label="Select Town" Items="Towns" OnSelected="OnRegionSelected" ItemsChanged="@_selectedTownIsNew" @key="Towns"></ListComponentTown>
     </div>
-    <div class="form-group">
-        <label for="description">Backstory</label>
-        <InputTextArea id="description" class="form-control" @bind-Value="EditItem.Backstory" />
-    </div>
+
+    <Input TValue="string" RenderAsTextArea="true" Label="Backstory" Id="backstory" @bind-Value="EditItem.Backstory" />
     <ActionButtons TItem="NPC" EditItem="@EditItem"
                    OnDelete="@OnDelete" OnSave="@OnSave" SaveButtonText="@SaveButtonText" OnDeleteAllInstances="@OnDeleteAllInstances"></ActionButtons>
 </EditForm>
