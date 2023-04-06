@@ -1,0 +1,36 @@
+﻿@inherits EnumListComponentBase<Alignment>
+@using DnDWorldCreate.Data.Enums
+@using System.Text.RegularExpressions
+
+<div class="form-group">
+    <label for="alignment">@Label</label>
+    <select id="alignment" class="form-control" value="@SelectedValue" @onchange="OnSelect">
+        @foreach (var alignment in EnumValues)
+        {
+            <option value="@alignment">@AlignmentDisplayValues[alignment]</option>
+        }
+    </select>
+</div>
+
+@code {
+    protected Dictionary<Alignment, string> AlignmentDisplayValues { get; set; } = new Dictionary<Alignment, string>();
+
+    protected override void OnInitialized()
+    {
+        EnumValues = Enum.GetValues(typeof(Alignment)).Cast<Alignment>().ToList();
+        InitializeDisplayValues();
+    }
+    private void InitializeDisplayValues()
+    {
+        AlignmentDisplayValues = EnumValues.ToDictionary(
+            alignment => alignment,
+            alignment => GetDisplayValue(alignment)
+        );
+    }
+
+    private string GetDisplayValue(Alignment alignment)
+    {
+        // Split the Enum value by uppercase characters and join them with a space
+        return string.Join(" ", System.Text.RegularExpressions.Regex.Split(alignment.ToString(), @"(?<!^)(?=[A-Z])"));
+    }
+}

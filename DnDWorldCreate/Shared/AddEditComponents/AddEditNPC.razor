@@ -1,6 +1,7 @@
 ﻿@using DnDWorldCreate.Data.Entitys
 @using DnDWorldCreate.Services
 @using DnDWorldCreate.Shared.AddEditComponents.InputTextComponents
+@using DnDWorldCreate.Data.Enums
 @inherits AddEditBase<NPC>
 @inject TownService _townService
 <EditForm Model="EditItem">
@@ -19,6 +20,7 @@
     <Input TValue="int" InputType="number" Label="Dexterity" Id="dexterity" @bind-Value="Dexterity" />
     <Input TValue="int" InputType="number" Label="Constitution" Id="constitution" @bind-Value="Constitution" />
 
+    <AlignmentListComponent @bind-SelectedValue="Alignment" Label="Select Alignment"></AlignmentListComponent>
     <ActionButtons TItem="NPC" EditItem="@EditItem"
                    OnDelete="@OnDelete" OnSave="@OnSaveNPC" SaveButtonText="@SaveButtonText" OnDeleteAllInstances="@OnDeleteAllInstances"></ActionButtons>
 </EditForm>
@@ -33,8 +35,9 @@
     private int Dexterity { get; set; }
     private int Constitution { get; set; }
     private int Age { get; set; }
+    private Alignment Alignment { get; set; }
     private TownSelectionComponent? townSelectionComponent;
-   
+
     protected override async Task OnParametersSetAsync()
     {
         if (EditItem == null)
@@ -51,12 +54,16 @@
         Charisma = EditItem.Stats.Charisma;
         Dexterity = EditItem.Stats.Dexterity;
         Constitution = EditItem.Stats.Constitution;
+        if(EditItem.Alignment != null)
+        {
+            Alignment = (Alignment)EditItem.Alignment;
+        }
         if(townSelectionComponent != null)
         {
             await townSelectionComponent.LoadTownsAsync();
         }
     }
-   
+
     private void OnSaveNPC()
     {
         EditItem.Stats.Strength = Strength;
@@ -66,6 +73,7 @@
         EditItem.Stats.Dexterity = Dexterity;
         EditItem.Stats.Constitution = Constitution;
         EditItem.Age = Age;
+        EditItem.Alignment = Alignment;
         // Call the OnSave method that was passed as a parameter
         OnSave.InvokeAsync(EditItem);
     }
