@@ -1,4 +1,5 @@
 ﻿using DnDWorldCreate.Data.Entitys;
+using System.Reflection.Metadata.Ecma335;
 
 namespace DnDWorldCreate.Services
 {
@@ -16,28 +17,33 @@ namespace DnDWorldCreate.Services
         }
         public async Task<IEnumerable<Region>> GetRegionsAsync(bool forceReload = false)
         {
-            
+
             if (_regions == null || forceReload)
             {
                 _regions = await _regionService.GetAllRegionsAsync();
             }
 
             return _regions;
+
         }
         public async Task<IReadOnlyList<Region>> GetRegionsReadOnlyAsync(bool forceReload = false)
         {
+
             var regions = await _regionService.GetAllRegionsAsync();
             return (IReadOnlyList<Region>)regions;
+
         }
         public async Task<IEnumerable<Region>> GetEditableRegionsAsync(bool forceReload = false)
         {
+
             if (_regions == null || forceReload)
             {
                 var regions = (await _regionService.GetAllRegionsAsync()).ToList();
-                regions.Remove(regions.First(x => x.Id == 0));
+                regions.Remove(regions.First(x => x.Id == 1));
                 _regions = regions;
             }
             return _regions;
+
         }
         public async Task DeleteRegionWithTownsAsync(int regionId)
         {
@@ -48,11 +54,14 @@ namespace DnDWorldCreate.Services
                 await _townService.DeleteTownAsync(town.Id);
             }
             await _regionService.DeleteRegionAsync(regionId);
+
         }
         public async Task<Region> GetUnassignedRegion()
         {
-            var unAssignedRegion = await _regionService.GetRegionByIdAsync(0);
+
+            var unAssignedRegion = await _regionService.GetRegionByIdAsync(1);
             return unAssignedRegion;
+
         }
     }
 }

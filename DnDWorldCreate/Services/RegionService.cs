@@ -8,10 +8,14 @@ namespace DnDWorldCreate.Services
     public class RegionService
     {
         private readonly IRepository<Region> _regionRepository;
-        public RegionService(IRepository<Region> regionRepository)
+        private readonly IDbContextFactory<DnDWorldContext> _contextFactory;
+
+        public RegionService(IRepository<Region> regionRepository, IDbContextFactory<DnDWorldContext> contextFactory)
         {
             _regionRepository = regionRepository;
+            _contextFactory = contextFactory;
         }
+
         public async Task<Region> AddRegionAsync(Region? region)
         {
             if (region == null)
@@ -19,19 +23,22 @@ namespace DnDWorldCreate.Services
                 throw new ArgumentNullException(nameof(region));
             }
 
-            await _regionRepository.AddAsync(region);
-            await _regionRepository.SaveChangesAsync();
+            using var context = _contextFactory.CreateDbContext();
+            await _regionRepository.AddAsync(region, context);
+            await _regionRepository.SaveChangesAsync(context);
 
             return region;
         }
         public async Task<Region> GetRegionByIdAsync(int id)
         {
-            var region = await _regionRepository.GetByIdAsync(id) ?? throw new ArgumentException($"Cannot find region: {id}");
+            using var context = _contextFactory.CreateDbContext();
+            var region = await _regionRepository.GetByIdAsync(id, context) ?? throw new ArgumentException($"Cannot find region: {id}");
             return region;
         }
         public async Task<IEnumerable<Region>> GetAllRegionsAsync()
         {
-            return await _regionRepository.GetAllAsync();
+            using var context = _contextFactory.CreateDbContext();
+            return await _regionRepository.GetAllAsync(context);
         }
         public async Task UpdateRegionAsync(Region updatedRegion)
         {
@@ -40,7 +47,8 @@ namespace DnDWorldCreate.Services
                 throw new ArgumentNullException(nameof(updatedRegion));
             }
 
-            var originalRegion = await _regionRepository.GetByIdAsync(updatedRegion.Id);
+            using var context = _contextFactory.CreateDbContext();
+            var originalRegion = await _regionRepository.GetByIdAsync(updatedRegion.Id, context);
             if (originalRegion == null)
             {
                 throw new ArgumentException($"Region with ID {updatedRegion.Id} not found.");
@@ -49,27 +57,30 @@ namespace DnDWorldCreate.Services
             originalRegion.Name = updatedRegion.Name;
             originalRegion.Description = updatedRegion.Description;
 
-            _regionRepository.Update(originalRegion);
-            await _regionRepository.SaveChangesAsync();
+            _regionRepository.Update(originalRegion, context);
+            await _regionRepository.SaveChangesAsync(context);
         }
         public async Task DeleteRegionAsync(int id)
         {
-            var region = await _regionRepository.GetByIdAsync(id);
+            using var context = _contextFactory.CreateDbContext();
+            var region = await _regionRepository.GetByIdAsync(id, context);
 
             if (region == null)
             {
                 throw new InvalidOperationException($"Region with ID {id} not found.");
             }
-            if(region.Id == 0) { 
+            if (region.Id == 0)
+            {
                 throw new InvalidOperationException("The Unassigned region cannot be deleted");
             }
 
-            _regionRepository.Remove(region);
-            await _regionRepository.SaveChangesAsync();
+            _regionRepository.Remove(region, context);
+            await _regionRepository.SaveChangesAsync(context);
         }
         public async Task<int> SaveChangesAsync()
         {
-            return await _regionRepository.SaveChangesAsync();
+            using var context = _contextFactory.CreateDbContext();
+            return await _regionRepository.SaveChangesAsync(context);
         }
     }
 }

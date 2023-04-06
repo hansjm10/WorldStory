@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DnDWorldCreate.Migrations
 {
     [DbContext(typeof(DnDWorldContext))]
-    [Migration("20230319054006_Items")]
-    partial class Items
+    [Migration("20230329020213_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,34 +24,7 @@ namespace DnDWorldCreate.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DnDWorldCreate.Data.NPC", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Backstory")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Occupation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TownId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TownId");
-
-                    b.ToTable("NPCs");
-                });
-
-            modelBuilder.Entity("DnDWorldCreate.Data.Region", b =>
+            modelBuilder.Entity("DnDWorldCreate.Data.Entitys.Item", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -67,10 +40,68 @@ namespace DnDWorldCreate.Migrations
 
                     b.HasKey("Id");
 
+                    b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("DnDWorldCreate.Data.Entitys.NPC", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Backstory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Occupation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StatsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TownId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StatsId")
+                        .IsUnique();
+
+                    b.HasIndex("TownId");
+
+                    b.ToTable("NPCs");
+                });
+
+            modelBuilder.Entity("DnDWorldCreate.Data.Entitys.Region", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
                     b.ToTable("Regions");
                 });
 
-            modelBuilder.Entity("DnDWorldCreate.Data.Town", b =>
+            modelBuilder.Entity("DnDWorldCreate.Data.Entitys.Town", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -91,20 +122,59 @@ namespace DnDWorldCreate.Migrations
                     b.ToTable("Towns");
                 });
 
-            modelBuilder.Entity("DnDWorldCreate.Data.NPC", b =>
+            modelBuilder.Entity("DnDWorldCreate.Data.Stats.BaseStats", b =>
                 {
-                    b.HasOne("DnDWorldCreate.Data.Town", "Town")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Charisma")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Constitution")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Dexterity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Intelligence")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Strength")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Wisdom")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BaseStats");
+                });
+
+            modelBuilder.Entity("DnDWorldCreate.Data.Entitys.NPC", b =>
+                {
+                    b.HasOne("DnDWorldCreate.Data.Stats.BaseStats", "Stats")
+                        .WithOne("NPC")
+                        .HasForeignKey("DnDWorldCreate.Data.Entitys.NPC", "StatsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DnDWorldCreate.Data.Entitys.Town", "Town")
                         .WithMany("NPCs")
                         .HasForeignKey("TownId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Stats");
+
                     b.Navigation("Town");
                 });
 
-            modelBuilder.Entity("DnDWorldCreate.Data.Town", b =>
+            modelBuilder.Entity("DnDWorldCreate.Data.Entitys.Town", b =>
                 {
-                    b.HasOne("DnDWorldCreate.Data.Region", "Region")
+                    b.HasOne("DnDWorldCreate.Data.Entitys.Region", "Region")
                         .WithMany("Towns")
                         .HasForeignKey("RegionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -113,14 +183,20 @@ namespace DnDWorldCreate.Migrations
                     b.Navigation("Region");
                 });
 
-            modelBuilder.Entity("DnDWorldCreate.Data.Region", b =>
+            modelBuilder.Entity("DnDWorldCreate.Data.Entitys.Region", b =>
                 {
                     b.Navigation("Towns");
                 });
 
-            modelBuilder.Entity("DnDWorldCreate.Data.Town", b =>
+            modelBuilder.Entity("DnDWorldCreate.Data.Entitys.Town", b =>
                 {
                     b.Navigation("NPCs");
+                });
+
+            modelBuilder.Entity("DnDWorldCreate.Data.Stats.BaseStats", b =>
+                {
+                    b.Navigation("NPC")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

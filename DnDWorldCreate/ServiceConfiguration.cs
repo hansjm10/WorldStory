@@ -10,7 +10,7 @@ public static class ServiceConfiguration
     {
         services.AddRazorPages();
         services.AddServerSideBlazor();
-        services.AddDbContext<DnDWorldContext>(options => options.UseSqlServer(configuration.GetConnectionString("MyDatabase")), ServiceLifetime.Transient);
+        services.AddDbContextFactory<DnDWorldContext>(options => options.UseSqlServer(configuration.GetConnectionString("MyDatabase")));
 
         services.AddScoped<RegionService>();
         services.AddScoped<TownService>();
@@ -18,6 +18,8 @@ public static class ServiceConfiguration
         services.AddScoped<RegionManagerService>();
         services.AddScoped<ItemService>();
         services.AddScoped<BaseStatsService>();
+        services.AddScoped<NPCManagerService>();
+        services.AddScoped<INPCServiceBase, NPCManagerService>();
         services.AddScoped<ITownRepository, TownRepository>();
         services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
     }

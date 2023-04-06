@@ -3,6 +3,7 @@ using DnDWorldCreate.Data.Entitys;
 using DnDWorldCreate.Services;
 using DnDWorldCreate.Services.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +14,19 @@ namespace DnDWorldCreateTests
     public class RegionServiceTests
     {
         private readonly DbContextOptions<DnDWorldContext> _options;
+
         public RegionServiceTests()
         {
             _options = new DbContextOptionsBuilder<DnDWorldContext>()
                 .UseInMemoryDatabase(databaseName: "DnDWorldCreate_Test")
                 .Options;
         }
+
         private RegionService GetRegionService()
         {
-            var context = new DnDWorldContext(_options);
-            var repository = new EfRepository<Region>(context);
-            var service = new RegionService(repository);
+            var dbContextFactory = new TestDbContextFactory(_options);
+            var repository = new EfRepository<Region>(dbContextFactory);
+            var service = new RegionService(repository, dbContextFactory);
             return service;
         }
         [Fact]
@@ -115,13 +118,11 @@ namespace DnDWorldCreateTests
             await service.SaveChangesAsync();
 
             // Assert
-            using (var context = new DnDWorldContext(_options))
-            {
-                var region = await context.Regions.FirstOrDefaultAsync(r => r.Id == originalRegion.Id);
-                Assert.NotNull(region);
-                Assert.NotEqual(originalDescription, updatedRegion.Description);
-                Assert.Equal(region.Description, updatedRegion.Description);
-            }
+            var retrievedRegion = await service.GetRegionByIdAsync(originalRegion.Id);
+            Assert.NotNull(retrievedRegion);
+            Assert.NotEqual(originalDescription, retrievedRegion.Description);
+            Assert.Equal(updatedRegion.Description, retrievedRegion.Description);
         }
+
     }
 }

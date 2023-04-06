@@ -10,10 +10,18 @@ namespace DnDWorldCreate.Shared.ListComponents
         [Parameter] public IEnumerable<TItem> Items { get; set; } = new List<TItem>();
         [Parameter] public TItem SelectedValue { get; set; }
         [Parameter] public bool ItemsChanged { get; set; }
+        [Parameter] public int? SelectedId { get; set; }
         public ListComponentBase() 
         {
             SelectedValue = CreateDefaultSelectedItem();
             Label = string.Empty;
+        }
+        protected override void OnParametersSet()
+        {
+            if(SelectedId != null)
+            {
+                SelectedValue = Items.FirstOrDefault(item => item.Id == SelectedId.Value);
+            }
         }
         protected async Task OnSelectChanged(ChangeEventArgs e)
         {

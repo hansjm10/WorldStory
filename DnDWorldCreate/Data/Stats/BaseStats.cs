@@ -11,6 +11,7 @@ namespace DnDWorldCreate.Data.Stats
         public int Dexterity { get; set; }
         public int Wisdom { get; set; }
         public int Charisma { get; set; }
+        public NPC NPC { get; set; }
         public BaseStats()
         {
             Constitution = 0;

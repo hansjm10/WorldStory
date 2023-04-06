@@ -1,0 +1,32 @@
+﻿@using DnDWorldCreate.Data.Entitys
+@using DnDWorldCreate.Services
+@inject TownService _townService
+
+<div class="form-group">
+    <label for="@Label">@Label</label>
+    <ListComponentTown Label="Select Town" Items="Towns" OnSelected="OnTownSelected" SelectedId="@SelectedId" ItemsChanged="@_selectedTownIsNew" @key="Towns"></ListComponentTown>
+</div>
+
+@code {
+    [Parameter] public string Label { get; set; }
+    [Parameter] public int SelectedId { get; set; }
+    [Parameter] public EventCallback<int> SelectedIdChanged { get; set; }
+    private bool _selectedTownIsNew = true;
+    private IReadOnlyList<Town> Towns { get; set; } = new List<Town>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        await LoadTownsAsync();
+    }
+    private void OnTownSelected(Town town)
+    {
+        SelectedId = town?.Id ?? 0;
+        _selectedTownIsNew = town == null;
+        SelectedIdChanged.InvokeAsync(SelectedId);
+    }
+
+    public async Task LoadTownsAsync()
+    {
+        Towns = (await _townService.GetAllTownsAsync()).ToList();
+    }
+}

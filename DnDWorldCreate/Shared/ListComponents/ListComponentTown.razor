@@ -1,6 +1,6 @@
 ﻿@inherits ListComponentBase<Town>
 <label>@Label</label>
-<select @onchange="OnSelectChanged" class="form-control">
+<select @onchange="OnSelectChanged" class="form-control" value="@SelectedId">
     @if (ItemsChanged)
     {
         <option selected>-- Select a value --</option>
