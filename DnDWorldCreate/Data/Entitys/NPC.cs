@@ -16,7 +16,7 @@ namespace DnDWorldCreate.Data.Entitys
         public Alignment? Alignment { get; set; }
         public int? Age { get; set; }
         //public List<Item> Inventory { get; set; } = new List<Item>();
-        //public List<string> PersonalityTraits { get; set; } = new List<string>();
+        public List<string> PersonalityTraits { get; set; } = new List<string>();
         public NPC() { 
             Stats = new BaseStats();
         }

@@ -8,10 +8,10 @@
 <AddEditItem SaveButtonText="@(SelectedItem == null ? "Save New Item" : "Update Item")" OnSave="OnSaveItem" OnDelete="OnDeleteItem" EditItem="@(SelectedItem ?? new Item())" />
 
 @code {
-    protected override Func<ItemService, ItemService, Task<IEnumerable<Item>>> GetAllItemsAsync => (service, unusedService) => service.GetAllItemsAsync();
-    protected override Func<ItemService, ItemService, Task<IReadOnlyList<Item>>> GetAllItemsReadOnlyAsync => (service, unusedService) => service.GetAllItemsReadOnlyAsync();
-    protected override Func<ItemService, Item, Task> AddItemAsync => (service, item) => service.AddItemAsync(item);
-    protected override Func<ItemService, Item, Task> UpdateItemAsync => (service, item) => service.UpdateItemAsync(item);
-    protected override Func<ItemService, int, Task> DeleteItemAsync => (service, id) => service.DeleteItemAsync(id);
+    protected override Func<ItemService, ItemService, Task<IEnumerable<Item>>> GetAllItemsAsync => (service, unusedService) => service.GetAllAsync();
+    protected override Func<ItemService, ItemService, Task<IReadOnlyList<Item>>> GetAllItemsReadOnlyAsync => (service, unusedService) => service.GetAllReadOnlyAsync();
+    protected override Func<ItemService, Item, Task> AddItemAsync => (service, item) => service.AddAsync(item);
+    protected override Func<ItemService, Item, Task> UpdateItemAsync => (service, item) => service.UpdateAsync(item);
+    protected override Func<ItemService, int, Task> DeleteItemAsync => (service, id) => service.DeleteAsync(id);
     protected override int GetItemId(Item item) => item.Id;
 }

@@ -20,7 +20,7 @@ namespace DnDWorldCreate.Services
 
             if (_regions == null || forceReload)
             {
-                _regions = await _regionService.GetAllRegionsAsync();
+                _regions = await _regionService.GetAllAsync();
             }
 
             return _regions;
@@ -29,7 +29,7 @@ namespace DnDWorldCreate.Services
         public async Task<IReadOnlyList<Region>> GetRegionsReadOnlyAsync(bool forceReload = false)
         {
 
-            var regions = await _regionService.GetAllRegionsAsync();
+            var regions = await _regionService.GetAllAsync();
             return (IReadOnlyList<Region>)regions;
 
         }
@@ -38,7 +38,7 @@ namespace DnDWorldCreate.Services
 
             if (_regions == null || forceReload)
             {
-                var regions = (await _regionService.GetAllRegionsAsync()).ToList();
+                var regions = (await _regionService.GetAllAsync()).ToList();
                 regions.Remove(regions.First(x => x.Id == 1));
                 _regions = regions;
             }
@@ -51,15 +51,15 @@ namespace DnDWorldCreate.Services
 
             foreach (var town in towns)
             {
-                await _townService.DeleteTownAsync(town.Id);
+                await _townService.DeleteAsync(town.Id);
             }
-            await _regionService.DeleteRegionAsync(regionId);
+            await _regionService.DeleteAsync(regionId);
 
         }
         public async Task<Region> GetUnassignedRegion()
         {
 
-            var unAssignedRegion = await _regionService.GetRegionByIdAsync(1);
+            var unAssignedRegion = await _regionService.GetByIdAsync(1);
             return unAssignedRegion;
 
         }

@@ -11,9 +11,9 @@
 @code {
     protected override Func<RegionService, RegionManagerService, Task<IEnumerable<Region>>> GetAllItemsAsync => (service, regionManagerService) => regionManagerService.GetEditableRegionsAsync(true);
     protected override Func<RegionService, RegionManagerService, Task<IReadOnlyList<Region>>> GetAllItemsReadOnlyAsync => (service, regionManagerService) => regionManagerService.GetRegionsReadOnlyAsync(true);
-    protected override Func<RegionService, Region, Task> AddItemAsync => (service, item) => service.AddRegionAsync(item);
-    protected override Func<RegionService, Region, Task> UpdateItemAsync => (service, item) => service.UpdateRegionAsync(item);
-    protected override Func<RegionService, int, Task> DeleteItemAsync => (service, id) => service.DeleteRegionAsync(id);
+    protected override Func<RegionService, Region, Task> AddItemAsync => (service, item) => service.AddAsync(item);
+    protected override Func<RegionService, Region, Task> UpdateItemAsync => (service, item) => service.UpdateAsync(item);
+    protected override Func<RegionService, int, Task> DeleteItemAsync => (service, id) => service.DeleteAsync(id);
     protected override Func<RegionManagerService, int, Task> DeleteItemAndChildrenItemsAsync => (service, item) => service.DeleteRegionWithTownsAsync(item);
     protected override int GetItemId(Region item) => item.Id;
 }

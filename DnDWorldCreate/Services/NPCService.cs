@@ -73,6 +73,10 @@ namespace DnDWorldCreate.Services
             originalNpc.TownId = updatedNpc.TownId;
             originalNpc.ImagePath = updatedNpc.ImagePath;
             originalNpc.Alignment = updatedNpc.Alignment;
+
+            //Sanitize personality traits to store it as a string in the database.
+            originalNpc.PersonalityTraits = updatedNpc.PersonalityTraits.Select(trait => trait.Replace(";", string.Empty)).ToList();
+
             await _nonPlayerCharacterRepository.UpdateAsync(originalNpc, context);
         }
         public async Task DeleteNPCAsync(int id)

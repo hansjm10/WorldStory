@@ -62,3 +62,8 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+input[type="number"].is-valid, input[type="number"].is-invalid {
+    padding-right: 30px !important;
+    background-position: right 5px center !important;
+}

@@ -3,8 +3,7 @@
 @inject TownService _townService
 
 <div class="form-group">
-    <label for="@Label">@Label</label>
-    <ListComponentTown Label="Select Town" Items="Towns" OnSelected="OnTownSelected" SelectedId="@SelectedId" ItemsChanged="@_selectedTownIsNew" @key="Towns"></ListComponentTown>
+    <ListComponentTown Label="@Label" Items="Towns" OnSelected="OnTownSelected" SelectedId="@SelectedId" ItemsChanged="@_selectedTownIsNew" @key="Towns"></ListComponentTown>
 </div>
 
 @code {
@@ -27,6 +26,6 @@
 
     public async Task LoadTownsAsync()
     {
-        Towns = (await _townService.GetAllTownsAsync()).ToList();
+        Towns = (await _townService.GetAllAsync()).ToList();
     }
 }

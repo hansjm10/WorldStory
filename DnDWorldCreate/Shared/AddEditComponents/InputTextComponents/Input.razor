@@ -1,4 +1,5 @@
 ﻿@using System.Linq.Expressions
+@using Microsoft.AspNetCore.Components.Forms
 @typeparam TValue
 @inherits InputBase<TValue>
 
@@ -6,11 +7,16 @@
     <label for="@Id">@Label</label>
     @if (RenderAsTextArea)
     {
-        <textarea @attributes="AdditionalAttributes" id="@Id" class="form-control @CssClass" @bind="CurrentValue" rows="@TextAreaRows"></textarea>
+        <textarea @attributes="AdditionalAttributes" id="@Id" class="form-control @CustomCssClass" @bind="CurrentValue" rows="@TextAreaRows"></textarea>
     }
     else
     {
-        <input @attributes="AdditionalAttributes" type="@InputType" id="@Id" class="form-control @CssClass" @bind="CurrentValue" />
+        <input @attributes="AdditionalAttributes" type="@InputType" id="@Id" class="form-control @CustomCssClass" @bind="CurrentValue" />
+    }
+    @if(!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <br />
+        @ErrorMessage
     }
 </div>
 
@@ -20,7 +26,47 @@
     [Parameter] public string InputType { get; set; } = "text";
     [Parameter] public bool RenderAsTextArea { get; set; } = false;
     [Parameter] public int TextAreaRows { get; set; } = 3;
+    [Parameter] public int Min { get; set; } = 1;
+    [Parameter] public int Max { get; set; } = 20;
 
+    private string CustomCssClass { get; set; } = string.Empty;
+    private string ErrorMessage { get; set; } = string.Empty;
+
+    private void RangeValidator(TValue value)
+    {
+        if (int.TryParse(value?.ToString(), out int parsedValue))
+        {
+            if (parsedValue < Min || parsedValue > Max)
+            {
+                EditContext?.NotifyValidationStateChanged();
+                CurrentValue = default!;
+                CustomCssClass = "is-invalid";
+                ErrorMessage = $"The value must be between '{Min}' to '{Max}'";
+            }
+            else
+            {
+                CustomCssClass = "is-valid";
+                ErrorMessage = string.Empty;
+            }
+        }
+        else
+        {
+            CustomCssClass = "is-invalid";
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (IsNumericType(typeof(TValue)))
+        {
+            if (CurrentValue != null)
+            {
+                RangeValidator(CurrentValue);
+            }
+        }
+    }
     protected override bool TryParseValueFromString(string? value, out TValue result, out string? validationErrorMessage)
     {
         Type type = typeof(TValue);
@@ -59,6 +105,26 @@
         else
         {
             throw new InvalidOperationException($"The type '{typeof(TValue)}' is not supported by this input component.");
+        }
+    }
+    private bool IsNumericType(Type type)
+    {
+        switch (Type.GetTypeCode(type))
+        {
+            case TypeCode.Byte:
+            case TypeCode.Decimal:
+            case TypeCode.Double:
+            case TypeCode.Int16:
+            case TypeCode.Int32:
+            case TypeCode.Int64:
+            case TypeCode.SByte:
+            case TypeCode.Single:
+            case TypeCode.UInt16:
+            case TypeCode.UInt32:
+            case TypeCode.UInt64:
+                return true;
+            default:
+                return false;
         }
     }
 }

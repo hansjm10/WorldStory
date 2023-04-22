@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DnDWorldCreate.Migrations
 {
     [DbContext(typeof(DnDWorldContext))]
-    [Migration("20230401210451_InitialCreate2")]
-    partial class InitialCreate2
+    [Migration("20230407002632_AddPersonalityTraits")]
+    partial class AddPersonalityTraits
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,6 +69,11 @@ namespace DnDWorldCreate.Migrations
 
                     b.Property<string>("Occupation")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonalityTraits")
+                        .IsRequired()
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(max)");
 
                     b.Property<int>("StatsId")
                         .HasColumnType("int");

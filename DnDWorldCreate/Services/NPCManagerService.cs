@@ -39,7 +39,7 @@ namespace DnDWorldCreate.Services
             var npc = await _npcService.GetNPCByIdAsync(id);
             if (npc != null)
             {
-                await _baseStatsService.DeleteBaseStatsAsync(npc.StatsId);
+                await _baseStatsService.DeleteAsync(npc.StatsId);
                 await _npcService.DeleteNPCAsync(id);
             }
         }

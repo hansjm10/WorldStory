@@ -1,0 +1,44 @@
+﻿@using DnDWorldCreate.Utilities;
+<input type="text" @bind="newTrait" placeholder="Enter a personality trait" />
+<button @onclick="AddRandomTrait">Add Random Trait</button>
+<button @onclick="AddTrait">Add Trait</button>
+
+@if (Traits.Count > 0)
+{
+    <h4>Added Traits:</h4>
+    <ul>
+        @foreach (var trait in Traits)
+        {
+            <li>@trait</li>
+        }
+    </ul>
+}
+
+@code {
+    private string newTrait;
+    [Parameter] public List<string> Traits { get; set; }
+    [Parameter] public EventCallback<List<string>> TraitsChanged { get; set; }
+
+    private void AddTrait()
+    {
+        if (!string.IsNullOrWhiteSpace(newTrait))
+        {
+            newTrait = newTrait.Replace(";", string.Empty);
+            Traits.Add(newTrait);
+            newTrait = string.Empty;
+            TraitsChanged.InvokeAsync(Traits);
+        }
+    }
+    private void AddRandomTrait()
+    {
+        int maxTraits = 30; // Adjust the maximum number of allowed traits as needed
+        newTrait = RandomNameGenerator.GenerateRandomPersonalityTrait(baseTrait => Traits.Exists(t => t.Contains(baseTrait)), maxTraits);
+
+        if (newTrait != null)
+        {
+            Traits.Add(newTrait);
+            newTrait = string.Empty;
+            TraitsChanged.InvokeAsync(Traits);
+        }
+    }
+}

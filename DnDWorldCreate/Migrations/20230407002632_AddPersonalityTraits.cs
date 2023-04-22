@@ -5,7 +5,7 @@
 namespace DnDWorldCreate.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class AddPersonalityTraits : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -88,7 +88,10 @@ namespace DnDWorldCreate.Migrations
                     Backstory = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TownId = table.Column<int>(type: "int", nullable: false),
                     ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StatsId = table.Column<int>(type: "int", nullable: false)
+                    StatsId = table.Column<int>(type: "int", nullable: false),
+                    Alignment = table.Column<int>(type: "int", nullable: true),
+                    Age = table.Column<int>(type: "int", nullable: true),
+                    PersonalityTraits = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false)
                 },
                 constraints: table =>
                 {

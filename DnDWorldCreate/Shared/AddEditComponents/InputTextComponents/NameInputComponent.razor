@@ -1,0 +1,28 @@
+﻿@using DnDWorldCreate.Utilities
+
+<Input TValue="string" Label="Name" Id="name" @bind-Value="Name" @oninput="OnInput" />
+
+<button type="submit" class="btn btn-primary" @onclick=@(()=> RandomName())>Random Name</button>
+
+@code {
+    [Parameter] public string Name { get; set; }
+    [Parameter] public EventCallback<string> NameChanged { get; set; }
+
+    private async Task OnInput(ChangeEventArgs e)
+    {
+        Name = e.Value.ToString();
+        await NameChanged.InvokeAsync(Name);
+    }
+    private async Task RandomName()
+    {
+        Random rnd = new Random();
+        var random = rnd.Next(1, 3);
+        bool hasFamily = random == 2;
+        Name = RandomNameGenerator.GenerateFantasyName();
+        if(hasFamily)
+        {
+            Name += " " + RandomNameGenerator.GenerateFantasyFamilyName();
+        }
+        await NameChanged.InvokeAsync(Name);
+    }
+}

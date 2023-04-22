@@ -7,19 +7,35 @@
 <EditForm Model="EditItem">
     <DataAnnotationsValidator />
     <ValidationSummary />
+    <div>
+        <NameInputComponent Name="@Name" NameChanged="@OnNameChanged"></NameInputComponent>
+    </div>
+    <div style="display:flex">
+        <div style="margin: 20px">
+            <Input style="width:120px; padding: 20px" TValue="int" InputType="number" Label="Strength" Id="strength" @bind-Value="Strength" />
+        </div>
+        <div style="margin: 20px">
+        <Input style="width:120px; padding: 20px" TValue="int" InputType="number" Label="Intelligence" Id="intelligence" @bind-Value="Intelligence" />
+        </div>
+        <div style="margin: 20px">
+        <Input style="width:120px; padding: 20px" TValue="int" InputType="number" Label="Wisdom" Id="wisdom" @bind-Value="Wisdom" />
+        </div>
+        <div style="margin: 20px">
+            <Input style="width:120px; padding: 20px" TValue="int" InputType="number" Label="Charisma" Id="charisma" @bind-Value="Charisma" />
+        </div>
+        <div style="margin: 20px">
+            <Input style="width:120px; padding: 20px" TValue="int" InputType="number" Label="Dexterity" Id="dexterity" @bind-Value="Dexterity" />
+        </div>
+        <div style="margin: 20px">
+            <Input style="width:120px; padding: 20px" TValue="int" InputType="number" Label="Constitution" Id="constitution" @bind-Value="Constitution" />
+        </div>
+    </div>
 
-    <Input TValue="string" Label="Name" Id="name" @bind-Value="EditItem.Name" />
-
-    <TownSelectionComponent Label="Town ID" @bind-SelectedId="EditItem.TownId" @ref="townSelectionComponent"></TownSelectionComponent>
+    <TownSelectionComponent Label="Select Town" @bind-SelectedId="EditItem.TownId" @ref="townSelectionComponent"></TownSelectionComponent>
     <Input TValue="int" InputType="number" Label="Age" Id="age" @bind-Value="Age" />
     <Input TValue="string" RenderAsTextArea="true" Label="Backstory" Id="backstory" @bind-Value="EditItem.Backstory" />
-    <Input TValue="int" InputType="number" Label="Strength" Id="strength" @bind-Value="Strength" />
-    <Input TValue="int" InputType="number" Label="Intelligence" Id="intelligence" @bind-Value="Intelligence" />
-    <Input TValue="int" InputType="number" Label="Wisdom" Id="wisdom" @bind-Value="Wisdom" />
-    <Input TValue="int" InputType="number" Label="Charisma" Id="charisma" @bind-Value="Charisma" />
-    <Input TValue="int" InputType="number" Label="Dexterity" Id="dexterity" @bind-Value="Dexterity" />
-    <Input TValue="int" InputType="number" Label="Constitution" Id="constitution" @bind-Value="Constitution" />
 
+    <PersonalityTraitsComponent  @bind-Traits="PersonalityTraits" />
     <AlignmentListComponent @bind-SelectedValue="Alignment" Label="Select Alignment"></AlignmentListComponent>
     <ActionButtons TItem="NPC" EditItem="@EditItem"
                    OnDelete="@OnDelete" OnSave="@OnSaveNPC" SaveButtonText="@SaveButtonText" OnDeleteAllInstances="@OnDeleteAllInstances"></ActionButtons>
@@ -35,7 +51,9 @@
     private int Dexterity { get; set; }
     private int Constitution { get; set; }
     private int Age { get; set; }
+    private string Name { get; set; }
     private Alignment Alignment { get; set; }
+    private List<string> PersonalityTraits { get; set; } = new();
     private TownSelectionComponent? townSelectionComponent;
 
     protected override async Task OnParametersSetAsync()
@@ -54,6 +72,8 @@
         Charisma = EditItem.Stats.Charisma;
         Dexterity = EditItem.Stats.Dexterity;
         Constitution = EditItem.Stats.Constitution;
+        PersonalityTraits = EditItem.PersonalityTraits;
+        Name = EditItem.Name ?? string.Empty;
         if(EditItem.Alignment != null)
         {
             Alignment = (Alignment)EditItem.Alignment;
@@ -74,10 +94,15 @@
         EditItem.Stats.Constitution = Constitution;
         EditItem.Age = Age;
         EditItem.Alignment = Alignment;
+        EditItem.PersonalityTraits = PersonalityTraits;
+        EditItem.Name = Name;
         // Call the OnSave method that was passed as a parameter
         OnSave.InvokeAsync(EditItem);
     }
-    
+    private void OnNameChanged(string newName)
+    {
+        Name = newName;
+    }
 }
 
 
