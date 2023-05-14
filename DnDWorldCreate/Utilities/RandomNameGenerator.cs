@@ -47,7 +47,6 @@
     new[] { "meticulous", "detail-oriented", "precise", "thorough", "careful" },
     new[] { "curious", "inquisitive", "questioning", "eager to learn", "open-minded" },
     new[] { "loyal", "faithful", "trustworthy", "reliable", "devoted" },
-    new[] { "charismatic", "charming", "captivating", "magnetic", "alluring" }
 };
 
             string[] intensities = { "mildly", "moderately", "very", "extremely", "somewhat", "quite", "exceptionally", "remarkably", "significantly", "notably" };
