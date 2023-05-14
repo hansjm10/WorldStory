@@ -3,15 +3,15 @@
 @inject ItemService _itemService
 @inherits BaseClassComponent<Item, ItemService, ItemService>
 
-<ListComponentItem @key="Items" Label="Select Item" Items="Items" OnSelected="OnItemSelected" ItemsChanged="@_selectedItemIsNew" />
+<ListComponentItem @key="Entities" Label="Select Item" Items="Entities" OnSelected="OnEntitySelected" ItemsChanged="@_selectedEntityIsNew" />
 
-<AddEditItem SaveButtonText="@(SelectedItem == null ? "Save New Item" : "Update Item")" OnSave="OnSaveItem" OnDelete="OnDeleteItem" EditItem="@(SelectedItem ?? new Item())" />
+<AddEditItem SaveButtonText="@(SelectedEntity == null ? "Save New Item" : "Update Item")" OnSave="OnSaveEntityAsync" OnDelete="OnDeleteEntityAsync" EditItem="@(SelectedEntity ?? new Item())" />
 
 @code {
-    protected override Func<ItemService, ItemService, Task<IEnumerable<Item>>> GetAllItemsAsync => (service, unusedService) => service.GetAllAsync();
-    protected override Func<ItemService, ItemService, Task<IReadOnlyList<Item>>> GetAllItemsReadOnlyAsync => (service, unusedService) => service.GetAllReadOnlyAsync();
-    protected override Func<ItemService, Item, Task> AddItemAsync => (service, item) => service.AddAsync(item);
-    protected override Func<ItemService, Item, Task> UpdateItemAsync => (service, item) => service.UpdateAsync(item);
-    protected override Func<ItemService, int, Task> DeleteItemAsync => (service, id) => service.DeleteAsync(id);
-    protected override int GetItemId(Item item) => item.Id;
+    protected override Func<ItemService, ItemService, Task<IEnumerable<Item>>> GetAllEntitysAsyncFunc => (service, unusedService) => service.GetAllAsync();
+    protected override Func<ItemService, ItemService, Task<IReadOnlyList<Item>>> GetAllEntitysReadOnlyAsyncFunc => (service, unusedService) => service.GetAllReadOnlyAsync();
+    protected override Func<ItemService, Item, Task> AddEntityAsyncFunc => (service, item) => service.AddAsync(item);
+    protected override Func<ItemService, Item, Task> UpdateEntityAsyncFunc => (service, item) => service.UpdateAsync(item);
+    protected override Func<ItemService, int, Task> DeleteEntityAsyncFunc => (service, id) => service.DeleteAsync(id);
+    protected override int GetEntityId(Item item) => item.Id;
 }

@@ -16,6 +16,12 @@ namespace DnDWorldCreate.Services
             _baseStatsRepository = baseStatsRepository;
             _contextFactory = contextFactory;
         }
+        /// <summary>
+        /// Updates the BaseStats object in the database.
+        /// </summary>
+        /// <param name="baseStats">The BaseStats object to be updated.</param>
+        /// <param name="saveChanges">Flag to indicate if changes should be saved.</param>
+        /// <returns>Task representing the asynchronous operation.</returns>
         public async Task UpdateBaseStatsAsync(BaseStats baseStats, bool saveChanges = true)
         {
             if (baseStats == null)
@@ -31,14 +37,7 @@ namespace DnDWorldCreate.Services
                 throw new ArgumentNullException(nameof(originalBaseStats));
             }
 
-            originalBaseStats.Strength = baseStats.Strength;
-            originalBaseStats.Constitution = baseStats.Constitution;
-            originalBaseStats.Dexterity = baseStats.Dexterity;
-            originalBaseStats.Wisdom = baseStats.Wisdom;
-            originalBaseStats.Intelligence = baseStats.Intelligence;
-            originalBaseStats.Charisma = baseStats.Charisma;
-
-            _baseStatsRepository.Update(originalBaseStats, context);
+            _baseStatsRepository.Update(baseStats, context);
 
             if (saveChanges)
             {

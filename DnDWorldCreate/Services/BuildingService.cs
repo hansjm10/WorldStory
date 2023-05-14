@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DnDWorldCreate.Services
 {
-    public class BuildingService : BaseService<Buildings>
+    public class BuildingService : BaseService<Building>
     {
-        private readonly IRepository<Buildings> _buildingRepository;
+        private readonly IRepository<Building> _buildingRepository;
         private readonly IDbContextFactory<DnDWorldContext> _contextFactory;
-        public BuildingService(IRepository<Buildings> buildingRepository, IDbContextFactory<DnDWorldContext> contextFactory) : base (buildingRepository, contextFactory)
+        public BuildingService(IRepository<Building> buildingRepository, IDbContextFactory<DnDWorldContext> contextFactory) : base (buildingRepository, contextFactory)
         {
             _buildingRepository = buildingRepository;
             _contextFactory = contextFactory;

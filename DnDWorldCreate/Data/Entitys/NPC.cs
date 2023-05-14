@@ -17,8 +17,38 @@ namespace DnDWorldCreate.Data.Entitys
         public int? Age { get; set; }
         //public List<Item> Inventory { get; set; } = new List<Item>();
         public List<string> PersonalityTraits { get; set; } = new List<string>();
-        public NPC() { 
+        public NPC()
+        {
             Stats = new BaseStats();
+        }
+
+        /// <summary>
+        /// Clones the NPC object.
+        /// </summary>
+        /// <returns>A cloned NPC object.</returns>
+        public override BaseEntity Clone()
+        {
+            NPC clonedNpc = (NPC)base.Clone();
+            clonedNpc.Name = Name;
+            clonedNpc.Backstory = Backstory;
+            clonedNpc.TownId = TownId;
+            clonedNpc.ImagePath = ImagePath;
+            clonedNpc.Alignment = Alignment;
+            clonedNpc.Age = Age;
+
+            clonedNpc.PersonalityTraits = new List<string>(this.PersonalityTraits);
+
+            if (Stats != null)
+            {
+                clonedNpc.Stats = (BaseStats)Stats.Clone();
+            }
+
+            if (Town != null)
+            {
+                clonedNpc.Town = (Town)Town.Clone();
+            }
+
+            return clonedNpc;
         }
     }
 }

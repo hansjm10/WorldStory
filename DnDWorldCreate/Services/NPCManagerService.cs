@@ -34,7 +34,7 @@ namespace DnDWorldCreate.Services
         public Task<NPC> GetNPCByIdAsync(int id) => _npcService.GetNPCByIdAsync(id);
         public Task<IEnumerable<NPC>> GetAllNPCsAsync() => _npcService.GetAllNPCsAsync();
         public Task<IReadOnlyList<NPC>> GetAllNPCsReadOnlyAsync() => _npcService.GetAllNPCsReadOnlyAsync();
-        public async Task DeleteNPCAsync(int id) 
+        public async Task DeleteNPCAsync(int id)
         {
             var npc = await _npcService.GetNPCByIdAsync(id);
             if (npc != null)
@@ -45,6 +45,6 @@ namespace DnDWorldCreate.Services
         }
         public Task<int> SaveChangesAsync() => _npcService.SaveChangesAsync();
         public Task<IEnumerable<NPC>> GetAllNPCsIncluding() => _npcService.GetAllNPCsIncluding();
-       
+
     }
 }

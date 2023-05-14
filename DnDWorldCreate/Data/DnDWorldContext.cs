@@ -14,7 +14,7 @@ namespace DnDWorldCreate.Data
         public DbSet<NPC> NPCs { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<BaseStats> BaseStats { get; set; }
-        public DbSet<Buildings> Buildings { get; set; }
+        public DbSet<Building> Buildings { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Configure the NPC entity

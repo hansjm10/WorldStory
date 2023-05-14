@@ -4,16 +4,16 @@
 @inject RegionManagerService _regionManagerService
 @inherits BaseClassComponent<Region, RegionService, RegionManagerService>
 
-<ListComponentRegion @key="Items" Label="Select Region" Items="Items" OnSelected="OnItemSelected" ItemsChanged="@_selectedItemIsNew" />
+<ListComponentRegion @key="Entities" Label="Select Region" Items="Entities" OnSelected="OnEntitySelected" ItemsChanged="@_selectedEntityIsNew" />
 
-<AddEditRegion ErrorMessage="@ErrorMessage" SaveButtonText="@(SelectedItem == null ? "Save New Region" : "Update Region")" OnSave="OnSaveItem" OnDelete="OnDeleteItem" OnDeleteAllInstances="OnDeleteItemAndChildrenItems" EditItem="@(SelectedItem ?? new Region())" />
+<AddEditRegion ErrorMessage="@ErrorMessage" SaveButtonText="@(SelectedEntity == null ? "Save New Region" : "Update Region")" OnSave="OnSaveEntityAsync" OnDelete="OnDeleteEntityAsync" OnDeleteAllInstances="OnDeleteEntityAndChildrenEntitesAsync" EditItem="@(SelectedEntity ?? new Region())" />
 
 @code {
-    protected override Func<RegionService, RegionManagerService, Task<IEnumerable<Region>>> GetAllItemsAsync => (service, regionManagerService) => regionManagerService.GetEditableRegionsAsync(true);
-    protected override Func<RegionService, RegionManagerService, Task<IReadOnlyList<Region>>> GetAllItemsReadOnlyAsync => (service, regionManagerService) => regionManagerService.GetRegionsReadOnlyAsync(true);
-    protected override Func<RegionService, Region, Task> AddItemAsync => (service, item) => service.AddAsync(item);
-    protected override Func<RegionService, Region, Task> UpdateItemAsync => (service, item) => service.UpdateAsync(item);
-    protected override Func<RegionService, int, Task> DeleteItemAsync => (service, id) => service.DeleteAsync(id);
-    protected override Func<RegionManagerService, int, Task> DeleteItemAndChildrenItemsAsync => (service, item) => service.DeleteRegionWithTownsAsync(item);
-    protected override int GetItemId(Region item) => item.Id;
+    protected override Func<RegionService, RegionManagerService, Task<IEnumerable<Region>>> GetAllEntitysAsyncFunc => (service, regionManagerService) => regionManagerService.GetEditableRegionsAsync(true);
+    protected override Func<RegionService, RegionManagerService, Task<IReadOnlyList<Region>>> GetAllEntitysReadOnlyAsyncFunc => (service, regionManagerService) => regionManagerService.GetRegionsReadOnlyAsync(true);
+    protected override Func<RegionService, Region, Task> AddEntityAsyncFunc => (service, item) => service.AddAsync(item);
+    protected override Func<RegionService, Region, Task> UpdateEntityAsyncFunc => (service, item) => service.UpdateAsync(item);
+    protected override Func<RegionService, int, Task> DeleteEntityAsyncFunc => (service, id) => service.DeleteAsync(id);
+    protected override Func<RegionManagerService, int, Task> DeleteEntityAndChildrenEntitesAsyncFunc => (service, item) => service.DeleteRegionWithTownsAsync(item);
+    protected override int GetEntityId(Region item) => item.Id;
 }

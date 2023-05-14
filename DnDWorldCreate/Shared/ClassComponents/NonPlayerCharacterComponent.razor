@@ -3,21 +3,21 @@
 @inject INPCServiceBase _NpcManagerService
 @inherits BaseClassComponent<NPC, NPCManagerService, NPCManagerService>
 
-<ListComponentNPC @key="Items" Label="Select NPC" Items="Items" OnSelected="OnItemSelected" ItemsChanged="@_selectedItemIsNew"/>
+<ListComponentNPC @key="Entities" Label="Select NPC" Items="Entities" OnSelected="OnItemSelected" ItemsChanged="@_selectedEntityIsNew"/>
 
-<AddEditNPC SaveButtonText="@(SelectedItem == null ? "Save New NPC" : "Update NPC")" OnSave="OnSaveItem" OnDelete="OnDeleteItem" @bind-EditItem="SelectedItem" />
+<AddEditNPC SaveButtonText="@(SelectedEntity == null ? "Save New NPC" : "Update NPC")" OnSave="OnSaveEntityAsync" OnDelete="OnDeleteEntityAsync" @bind-EditItem="SelectedEntity" />
 @code {
-    protected override Func<NPCManagerService, NPCManagerService, Task<IEnumerable<NPC>>> GetAllItemsAsync => (service, unusedService) => service.GetAllNPCsIncluding();
-    protected override Func<NPCManagerService, NPCManagerService, Task<IReadOnlyList<NPC>>> GetAllItemsReadOnlyAsync => (service, unusedSerivce) => service.GetAllNPCsReadOnlyAsync();
-    protected override Func<NPCManagerService, NPC, Task> AddItemAsync => (service, item) => service.AddNPCAsync(item);
-    protected override Func<NPCManagerService, NPC, Task> UpdateItemAsync => (service, item) => service.UpdateNpc(item);
-    protected override Func<NPCManagerService, int, Task> DeleteItemAsync => (service, id) => service.DeleteNPCAsync(id);
-    protected override int GetItemId(NPC item) => item.Id;
+    protected override Func<NPCManagerService, NPCManagerService, Task<IEnumerable<NPC>>> GetAllEntitysAsyncFunc => (service, unusedService) => service.GetAllNPCsIncluding();
+    protected override Func<NPCManagerService, NPCManagerService, Task<IReadOnlyList<NPC>>> GetAllEntitysReadOnlyAsyncFunc => (service, unusedSerivce) => service.GetAllNPCsReadOnlyAsync();
+    protected override Func<NPCManagerService, NPC, Task> AddEntityAsyncFunc => (service, item) => service.AddNPCAsync(item);
+    protected override Func<NPCManagerService, NPC, Task> UpdateEntityAsyncFunc => (service, item) => service.UpdateNpc(item);
+    protected override Func<NPCManagerService, int, Task> DeleteEntityAsyncFunc => (service, id) => service.DeleteNPCAsync(id);
+    protected override int GetEntityId(NPC item) => item.Id;
 
     protected new void OnItemSelected(NPC item)
     {
         ErrorMessage = string.Empty;
-        SelectedItem = item;
-        _selectedItemIsNew = item == null;
+        SelectedEntity = item;
+        _selectedEntityIsNew = item == null;
     }
 }

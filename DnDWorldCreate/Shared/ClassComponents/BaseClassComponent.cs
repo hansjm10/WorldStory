@@ -2,22 +2,22 @@
 
 namespace DnDWorldCreate.Shared.ClassComponents
 {
-    public abstract class BaseClassComponent<TItem, TService, TSecondService> : ComponentBase
+    public abstract class BaseClassComponent<TItem, TPrimaryService, TSecondaryService> : ComponentBase
     where TItem : class, new()
-    where TService : class
+    where TPrimaryService : class
     {
-        [Inject] protected TService? Service { get; set; }
-        [Inject] protected TSecondService? SecondService { get; set; }
+        [Inject] protected TPrimaryService? PrimaryService { get; set; }
+        [Inject] protected TSecondaryService? SecondaryService { get; set; }
 
-        protected abstract Func<TService, TSecondService, Task<IEnumerable<TItem>>> GetAllItemsAsync { get; }
-        protected abstract Func<TService, TSecondService, Task<IReadOnlyList<TItem>>> GetAllItemsReadOnlyAsync { get; }
-        protected abstract Func<TService, TItem, Task> AddItemAsync { get; }
-        protected abstract Func<TService, TItem, Task> UpdateItemAsync { get; }
-        protected abstract Func<TService, int, Task> DeleteItemAsync { get; }
-        protected virtual Func<TSecondService, int, Task>? DeleteItemAndChildrenItemsAsync { get; }
-        protected List<TItem> Items { get; set; } = new List<TItem>();
-        protected TItem? SelectedItem { get; set; }
-        protected bool _selectedItemIsNew = true;
+        protected abstract Func<TPrimaryService, TSecondaryService, Task<IEnumerable<TItem>>> GetAllEntitysAsyncFunc { get; }
+        protected abstract Func<TPrimaryService, TSecondaryService, Task<IReadOnlyList<TItem>>> GetAllEntitysReadOnlyAsyncFunc { get; }
+        protected abstract Func<TPrimaryService, TItem, Task> AddEntityAsyncFunc { get; }
+        protected abstract Func<TPrimaryService, TItem, Task> UpdateEntityAsyncFunc { get; }
+        protected abstract Func<TPrimaryService, int, Task> DeleteEntityAsyncFunc { get; }
+        protected virtual Func<TSecondaryService, int, Task>? DeleteEntityAndChildrenEntitesAsyncFunc { get; }
+        protected List<TItem> Entities { get; set; } = new List<TItem>();
+        protected TItem? SelectedEntity { get; set; }
+        protected bool _selectedEntityIsNew = true;
         protected string ErrorMessage { get; set; }
         public BaseClassComponent() 
         {
@@ -26,71 +26,71 @@ namespace DnDWorldCreate.Shared.ClassComponents
         protected override async Task OnInitializedAsync()
         {
             ErrorMessage = string.Empty;
-            await LoadItemsAsync();
+            await LoadEntitesAsync();
         }
 
-        protected async Task LoadItemsAsync()
+        protected async Task LoadEntitesAsync()
         {
-            Items = (await GetAllItemsAsync(Service!, SecondService!)).ToList();
+            Entities = (await GetAllEntitysAsyncFunc(PrimaryService ?? throw new InvalidOperationException("PrimaryService is null"), SecondaryService ?? throw new InvalidOperationException("SecondaryService is null"))).ToList();
         }
 
-        protected async Task OnSaveItem(TItem item)
+        protected async Task OnSaveEntityAsync(TItem item)
         {
             ErrorMessage = string.Empty;
-            var itemId = GetItemId(item);
+            var itemId = GetEntityId(item);
 
             if (itemId == 0)
             {
-                await AddItemAsync(Service!, item);
+                await AddEntityAsyncFunc(PrimaryService!, item);
             }
             else
             {
-                await UpdateItemAsync(Service!, item);
+                await UpdateEntityAsyncFunc(PrimaryService!, item);
             }
 
-            await ReloadForm();
+            await ReloadFormAsync();
         }
 
-        protected void OnItemSelected(TItem item)
+        protected void OnEntitySelected(TItem item)
         {
             ErrorMessage = string.Empty;
-            SelectedItem = item;
-            _selectedItemIsNew = item == null;
+            SelectedEntity = item;
+            _selectedEntityIsNew = item == null;
         }
 
-        protected async Task OnDeleteItem(TItem item)
+        protected async Task OnDeleteEntityAsync(TItem item)
         {
             try
             {
-                await DeleteItemAsync(Service!, GetItemId(item));
+                await DeleteEntityAsyncFunc(PrimaryService!, GetEntityId(item));
             }
             catch(InvalidOperationException ex)
             {
                 ErrorMessage = ex.Message;
             }
-            await ReloadForm();
+            await ReloadFormAsync();
         }
 
-        protected async Task ReloadForm()
+        protected async Task ReloadFormAsync()
         {
-            await LoadItemsAsync();
+            await LoadEntitesAsync();
 
-            SelectedItem = null;
-            _selectedItemIsNew = true;
+            SelectedEntity = null;
+            _selectedEntityIsNew = true;
             StateHasChanged();
         }
-        protected async Task OnDeleteItemAndChildrenItems(TItem item)
+        protected async Task OnDeleteEntityAndChildrenEntitesAsync(TItem item)
         {
-            if (DeleteItemAndChildrenItemsAsync != null)
+            if (DeleteEntityAndChildrenEntitesAsyncFunc != null)
             {
-                await DeleteItemAndChildrenItemsAsync(SecondService!, GetItemId(item));
-                await ReloadForm();
+                await DeleteEntityAndChildrenEntitesAsyncFunc(SecondaryService!, GetEntityId(item));
+                await ReloadFormAsync();
             }
             else
             {
                 throw new InvalidOperationException("Unable to delete items.");
             }
         }
-        protected abstract int GetItemId(TItem item);
+        protected abstract int GetEntityId(TItem item);
     }
 }
