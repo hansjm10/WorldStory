@@ -3,6 +3,7 @@ using DnDWorldCreate.Data.Interfaces.Stats;
 
 namespace DnDWorldCreate.Data.Stats
 {
+//Test
     public class BaseStats : BaseEntity, IConstitution, IStrength, IDexterity, IIntelligence, IWisdom, ICharisma
     {
         public int Constitution { get; set; }
